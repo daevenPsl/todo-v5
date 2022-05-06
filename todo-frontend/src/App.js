@@ -99,10 +99,6 @@ function App() {
   
     const [updateId, setUpdateId]= useState("");
     
-    function getIdToUpdate(id){
-      setUpdateId(id);
-      console.log("getIdToUpdate--------" + updateId)
-    }
 
   return (  
     <div className="App">
@@ -123,7 +119,7 @@ function App() {
     <Router>
     <Routes>
               <Route exact path='/addtodo' element={<TodoForm addTodo={addTodo}/>} />
-              <Route exact path='/viewtodo' element={<ViewTodo getIdToUpdate={getIdToUpdate}/>} />      
+              <Route exact path='/viewtodo' element={<ViewTodo setUpdateId={setUpdateId}/>} />      
               <Route exact path='/' element={<Home/>} />  
               <Route exact path='/updatepage' element={<UpdatePage updateId={updateId} />} />   
     </Routes>

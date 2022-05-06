@@ -6,7 +6,7 @@ import '../App.css';
 import { useNavigate } from "react-router-dom";
 import Home from './Home';
 
-function ViewTodo({getIdToUpdate}){
+function ViewTodo({setUpdateId}){
 
     const [todos, setTodos]= useState([]);
 
@@ -74,8 +74,9 @@ function ViewTodo({getIdToUpdate}){
 
   const routeChange = (evt) =>{ 
     const id=evt.target.value;
-    //console.log("zzzzzzzzzz"+ id)
-    getIdToUpdate(id);
+    //getIdToUpdate(id);
+    console.log("route changed called with id "+ id)
+    setUpdateId(id);
     navigate('/updatepage')
   }
 
@@ -84,6 +85,7 @@ function ViewTodo({getIdToUpdate}){
     return(
       <div className="App">
         <header className="App-header">
+          <h2 style={{marginTop: "20px"}}>Todos</h2>
         <DataTable
         rows={todos}
         headers={headers}

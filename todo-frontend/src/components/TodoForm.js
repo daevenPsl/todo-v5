@@ -3,6 +3,8 @@ import {v4 as uuidv4} from "uuid";
 import '../App.css';
 import {DataTable, Table, TableHead, TableRow, TableHeader, TableBody, TableCell, TableSelectRow , TableContainer, Button} from 'carbon-components-react';
 import { Form, TextInput, TextArea, Select, SelectItem } from 'carbon-components-react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function TodoForm({addTodo}){
 
@@ -28,8 +30,11 @@ function TodoForm({addTodo}){
             //add id before passing it to app.js using uuid
             addTodo({...todo, id: uuidv4()});
 
+            toast("Added "+todo.task+" to the list!");
             //reset tasktodo with empty string
             setTodo({...todo, task: ""});
+
+            
         }
     }
 
@@ -63,6 +68,7 @@ function TodoForm({addTodo}){
                 >
                     Add task
                 </Button>
+                <ToastContainer />
         </Form>
 
             </header>

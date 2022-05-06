@@ -3,8 +3,11 @@ import {v4 as uuidv4} from "uuid";
 import '../App.css';
 import {DataTable, Table, TableHead, TableRow, TableHeader, TableBody, TableCell, TableSelectRow , TableContainer, Button} from 'carbon-components-react';
 import { Form, TextInput, TextArea, Select, SelectItem } from 'carbon-components-react';
+import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-function UpdatePage({UpdateId}){
+function UpdatePage({updateId}){
 
 
     const [todo, setTodo]=useState({
@@ -15,7 +18,7 @@ function UpdatePage({UpdateId}){
 
 
     function handleTaskInputChange(e){
-        setTodo({...todo,id:UpdateId, task: e.target.value});
+        setTodo({...todo, id:updateId, task: e.target.value});
     }
 
     function handleSubmit(e){
@@ -25,11 +28,19 @@ function UpdatePage({UpdateId}){
         if(todo.task.trim()){
 
             console.log("updatepage called")
-            //add id before passing it to app.js using uuid
             //addTodo({...todo, id: uuidv4()});
-            setTodo({...todo, id:UpdateId});
-            console.log("dcdcinfnrnvirnrnv  "+ UpdateId)
-            //reset tasktodo with empty string
+            //setTodo({...todo, id:updateId});
+            console.log("inside handlesubmit   "+ todo.id +" "+ todo.task)
+            
+
+            axios.put(`http://localhost:3001/todo/update/${updateId}?task=${todo.task}`)
+            .then(res => {
+                console.log(res);
+                //console.log(res.data);
+            })
+
+            toast("Updated todo to "+ todo.task);
+
             setTodo({...todo, task: ""});
         }
     }
@@ -64,6 +75,7 @@ function UpdatePage({UpdateId}){
                 >
                     Update task
                 </Button>
+                <ToastContainer />
         </Form>
 
             </header>
