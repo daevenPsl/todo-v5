@@ -3,6 +3,8 @@ import './App.css';
 import TodoForm from './components/TodoForm';
 import ViewTodo from './components/ViewTodo';
 import Home from './components/Home';
+import Register from './components/Register';
+import Login from './components/Login';
 import UpdatePage from './components/UpdatePage';
 import axios from 'axios';
 import {DataTable, Table, TableHead, TableRow, TableHeader, TableBody, TableCell, TableSelectRow , TableContainer, Button} from 'carbon-components-react';
@@ -18,19 +20,21 @@ import {
 } from "carbon-components-react/lib/components/UIShell";
 
 
-
 function App() {
 
   const [todos, setTodos]= useState([]);
+  const [currentUser, setCurrentUser]=useState("");
 
   useEffect(() => {
 
-    axios.get(`http://localhost:3001/todo`)
-      .then(res => {
-        const notes = res.data;
-        setTodos(notes);
-        //console.log(notes);
-      })
+    // axios.get(`http://localhost:3001/todo`)
+    //   .then(res => {
+    //     const notes = res.data;
+    //     setTodos(notes);
+    //     //console.log(notes);
+    //   })
+
+      setCurrentUser(localStorage.getItem('user'))
 
   }, []);
 
@@ -40,7 +44,13 @@ function App() {
   function addTodo(todo){
     setTodos([...todos, todo]);
 
-    axios.post(`http://localhost:3001/todo`, { ...todo })
+    const config= {
+      headers:{
+        Authorization: 'Bearer ' + localStorage.getItem('token')
+      }
+    };
+    
+    axios.post(`http://localhost:3000/todo`, { ...todo }, config)
       .then(res => {
        // setTodos([todo, ...todos]);
         //console.log(res);
@@ -98,6 +108,14 @@ function App() {
 
   
     const [updateId, setUpdateId]= useState("");
+
+    
+
+    function handleLogout(){
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      setCurrentUser("");
+    }
     
 
   return (  
@@ -105,13 +123,16 @@ function App() {
 
 
 <Header aria-label="IBM Platform Name">
-      <HeaderName href="#" prefix="IBM">
-        [Platform]
+      <HeaderName href="#" prefix="">
+        {currentUser}
       </HeaderName>
       <HeaderNavigation aria-label="IBM [Platform]">
         <HeaderMenuItem href={'/'}>Home</HeaderMenuItem>
+        <HeaderMenuItem href={'/register'}>Register</HeaderMenuItem>
+        <HeaderMenuItem href={'/login'}>Login</HeaderMenuItem>
         <HeaderMenuItem href={'/addtodo'}>Add Todo</HeaderMenuItem>
         <HeaderMenuItem href={'/viewtodo'}>View Todo</HeaderMenuItem>
+        <HeaderMenuItem onClick={handleLogout}>Logout</HeaderMenuItem>
         
       </HeaderNavigation>
     </Header>
@@ -121,84 +142,19 @@ function App() {
               <Route exact path='/addtodo' element={<TodoForm addTodo={addTodo}/>} />
               <Route exact path='/viewtodo' element={<ViewTodo setUpdateId={setUpdateId}/>} />      
               <Route exact path='/' element={<Home/>} />  
-              <Route exact path='/updatepage' element={<UpdatePage updateId={updateId} />} />   
+              <Route exact path='/updatepage' element={<UpdatePage updateId={updateId} />} /> 
+              <Route exact path='/register' element={<Register/>} />   
+              <Route exact path='/login' element={<Login setCurrentUser={setCurrentUser}/>} />   
     </Routes>
 
     </Router>
 
       
-      {/* <header className="App-header">
-      <h1>ToDo</h1>
-      <TodoForm addTodo={addTodo}/>
-
-      <Router>
-        <div>
-          
-          <nav className="navbar navbar-expand-lg navbar-light bg-light">
-          
-            <h1><Link to={'/addtodo'} className="nav-link"> Add Todo </Link> <br/></h1>
-            <h1><Link to={'/viewtodo'} className="nav-link">View  Todos</Link></h1>
-            
          
-          </nav>
-         
-          <Routes>
-              <Route exact path='/addtodo' element={<TodoForm addTodo={addTodo}/>} />
-              <Route path='/viewtodo' element={<ViewTodo/>} />
-              
-          </Routes>
-        </div>
-      </Router>
-      
-      </header> */}
+          
     </div>
   );
 }
 
 export default App;
 
-
-
-{/* <TodoForm addTodo={addTodo}/> */}
-
-
-
-
-
-// <DataTable
-// rows={todos}
-// headers={headers}
-// render={({
-//   rows,
-//   headers,
-//   getHeaderProps,
-//   getSelectionProps,
-//   selectAll,
-//   selectedRows
-// }) => (
-//   <React.Fragment>
-//     <TableContainer>
-//       <Table>
-        
-//         <TableBody>
-//           {rows.map(row => (
-//             <TableRow key={row.id}>
-//               <TableSelectRow   {...getSelectionProps({ row, onClick: () => toggleComplete(row.id) })} />
-//               {row.cells.map(cell => {
-//                 //console.log(row);
-//               // console.log(cell.value);
-//               if(row.isSelected === true)
-//                   return <TableCell style={{color: "white", textDecoration: cell.value ? "line-through" : null}}  key={cell.id}>{cell.value}</TableCell>
-
-//                 return <TableCell   key={cell.id}>{cell.value}</TableCell>
-//               })}
-                                  
-//           <Button onClick={deleteRow} value={row.id}>Delete</Button>
-//             </TableRow>
-//           ))}
-//         </TableBody>
-//       </Table>
-//     </TableContainer>
-//   </React.Fragment>
-// )}
-// />

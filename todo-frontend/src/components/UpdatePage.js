@@ -32,11 +32,16 @@ function UpdatePage({updateId}){
             //setTodo({...todo, id:updateId});
             console.log("inside handlesubmit   "+ todo.id +" "+ todo.task)
             
+            const config= {
+                headers:{
+                  Authorization: 'Bearer ' + localStorage.getItem('token')
+                }
+              };
 
-            axios.put(`http://localhost:3001/todo/update/${updateId}?task=${todo.task}`)
+            axios.put(`http://localhost:3000/todo/update/${updateId}?task=${todo.task}`,"", config)
             .then(res => {
                 console.log(res);
-                //console.log(res.data);
+                console.log("update works");
             })
 
             toast("Updated todo to "+ todo.task);

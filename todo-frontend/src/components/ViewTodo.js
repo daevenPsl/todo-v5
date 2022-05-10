@@ -10,14 +10,23 @@ function ViewTodo({setUpdateId}){
 
     const [todos, setTodos]= useState([]);
 
+    
+
     useEffect(() => {
 
-        axios.get(`http://localhost:3001/todo`)
+      const config= {
+        headers:{
+          Authorization: 'Bearer ' + localStorage.getItem('token')
+        }
+      };
+      
+        axios.get('http://localhost:3000/todo', config)
           .then(res => {
             const notes = res.data;
             setTodos(notes);
             //console.log(notes);
           })
+          .catch(err=>{console.log("Error in viewtodo "+err)})
     
       }, []);
 
@@ -34,7 +43,13 @@ function ViewTodo({setUpdateId}){
       return todo
     }))
 
-    axios.put(`http://localhost:3001/todo/${id}`)
+    const config= {
+      headers:{
+        Authorization: 'Bearer ' + localStorage.getItem('token')
+      }
+    };
+
+    axios.put(`http://localhost:3000/todo/${id}`, config)
       .then(res => {
         console.log(res);
         //console.log(res.data);
@@ -62,11 +77,18 @@ function ViewTodo({setUpdateId}){
      // console.log("buttonCalled " + evt.target.value);
       setTodos(todos.filter(todo => todo.id !== id))
 
-      axios.delete(`http://localhost:3001/todo/${id}`)
+      const config= {
+        headers:{
+          Authorization: 'Bearer ' + localStorage.getItem('token')
+        }
+      };
+
+      axios.delete(`http://localhost:3000/todo/${id}`, config)
       .then(res => {
         console.log(res);
         //console.log(res.data);
       })
+      .catch(err=>{console.log("Error in viewtodo delete "+err)})
   }
 
 
@@ -80,7 +102,16 @@ function ViewTodo({setUpdateId}){
     navigate('/updatepage')
   }
 
-  
+
+
+  // useEffect(()=>{
+
+  //   axios.get('http://localhost:3000/auth', config)
+  //       .then(res=>{
+  //         console.log("Response from viewtodo "+res)
+  //       })
+  //       .catch(err=>{console.log("Error is "+err)})
+  // },[])
 
     return(
       <div className="App">
